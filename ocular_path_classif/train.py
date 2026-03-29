@@ -30,8 +30,8 @@ NUM_CLASSES = 9
 IMAGE_SIZE = 384
 BATCH_SIZE = 32
 NUM_EPOCHS = 50
-LEARNING_RATE = 0.001
-EARLY_STOP_PATIENCE = 8
+LEARNING_RATE = 3e-4
+EARLY_STOP_PATIENCE = 12
 
 def _train_one_epoch(
         model: nn.Module,
@@ -153,6 +153,13 @@ def train(
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer,
+        mode="min",
+        factor=0.5,
+        patience=4,
+    )
+
     history = {"train_loss": [], "val_loss": []}
     best_val_loss = float("inf")
     epochs_without_improvement = 0
@@ -163,6 +170,8 @@ def train(
         train_loss = _train_one_epoch(model, train_loader, criterion, optimizer)
         val_loss = _val_one_epoch(model, val_loader, criterion)
     
+        scheduler.step(val_loss)
+
         history["train_loss"].append(train_loss)
         history["val_loss"].append(val_loss)
     
