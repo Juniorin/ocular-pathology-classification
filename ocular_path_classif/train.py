@@ -74,7 +74,7 @@ def _val_one_epoch(
         loader: DataLoader,
         criterion: nn.Module,
 ) -> float:
-    """Run one validation epoch and return average loss
+    """Run one validation epoch and return average loss.
     
     Args:
         model: The CNN model.
@@ -94,8 +94,8 @@ def _val_one_epoch(
             images = images.to(DEVICE)
             labels = labels.to(DEVICE)
 
-            logits=model(images)
-            loss=criterion(logits, labels)
+            logits = model(images)
+            loss = criterion(logits, labels)
 
             total_loss += loss.item()
         
@@ -157,7 +157,7 @@ def train(
     best_val_loss = float("inf")
     epochs_without_improvement = 0
 
-    logger.info(f"Starting training for {num_epochs} epochs on {DEVICE}")
+    logger.info(f"Starting training for {num_epochs} epochs on {DEVICE}.")
 
     for epoch in range(1, num_epochs + 1):
         train_loss = _train_one_epoch(model, train_loader, criterion, optimizer)
@@ -185,7 +185,7 @@ def train(
             logger.info(f"Early stopping at epoch {epoch}")
             break
     
-    model.load_state_dict(torch.load(checkpoint_path, map_location=DEVICE))
+    model.load_state_dict(torch.load(checkpoint_path, map_location=DEVICE, weights_only=True))
     logger.success(f"Training complete. Best val loss: {best_val_loss:.4f}")
     logger.success(f"Best model saved to: {checkpoint_path}")
 
@@ -193,3 +193,7 @@ def train(
 
 if __name__ == "__main__":
     history = train()
+
+    import json
+    with open("history.json", "w") as f:
+        json.dump(history, f)
