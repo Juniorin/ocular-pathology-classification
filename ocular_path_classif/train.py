@@ -29,7 +29,7 @@ logger.info(f"Using device: {DEVICE}")
 NUM_CLASSES = 9
 IMAGE_SIZE = 384
 BATCH_SIZE = 32
-NUM_EPOCHS = 50
+NUM_EPOCHS = 75
 LEARNING_RATE = 3e-4
 EARLY_STOP_PATIENCE = 12
 
@@ -142,8 +142,7 @@ def train(
 
     counts = torch.zeros(NUM_CLASSES)
     for _, labels in train_loader:
-        for label in labels:
-            counts[label] += 1
+        counts += torch.bincount(labels, minlength=NUM_CLASSES).float()
         
     weights = 1.0 / (counts + 1e-6)
     weights = weights / weights.sum() * NUM_CLASSES
@@ -176,8 +175,8 @@ def train(
         history["val_loss"].append(val_loss)
     
         logger.info(
-            f"Epoch {epoch:>3}/{num_epochs} |"
-            f"train loss: {train_loss:.4f} |"
+            f"Epoch {epoch:>3}/{num_epochs} | "
+            f"train loss: {train_loss:.4f} | "
             f"val loss: {val_loss:.4f}"
         )
         
@@ -204,5 +203,6 @@ if __name__ == "__main__":
     history = train()
 
     import json
-    with open("history.json", "w") as f:
+    history_path = MODELS_DIR / "history.json"
+    with open(history.json, "w") as f:
         json.dump(history, f)
