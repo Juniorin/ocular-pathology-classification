@@ -4,7 +4,7 @@ model.py
 CNN for ocular pathology classification.
 
 Architecture:
-    - 4 conv blocks (32, 64, 128, 256): dataset size ~5k images -> 3-5 blocks, 
+    - 4 conv blocks (32, 64, 128, 256, 512): dataset size ~5k images -> 3-5 blocks, 
                                         analyzing fine details needed, 
                                         class similiarity=more depth needed,
                                         won't know if overfits until after training->regulariziation to minimize
@@ -62,7 +62,7 @@ class OcularCNNModel(nn.Module):
         """
         super().__init__()
 
-        # Each block doubles channels, but halves spatial dimensions 384->192->96->48->24
+        # Each block doubles channels, but halves spatial dimensions 384->192->96->48->24->12
         self.features = nn.Sequential(
             ConvBlock(in_channels=3, out_channels=32),
             ConvBlock(in_channels=32, out_channels=64),
@@ -71,11 +71,11 @@ class OcularCNNModel(nn.Module):
             ConvBlock(in_channels=256, out_channels=512),
         )
 
-        # Collapse spatial dims from (B, 256, 24, 24) -> (B, 256, 1, 1) to prevent overfitting
+        # Collapse spatial dims from (B, 512, 24, 24) -> (B, 512, 1, 1) to prevent overfitting
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
 
         self.classifier = nn.Sequential(
-            nn.Flatten(), # (B, 256, 1, 1) -> (B, 256)
+            nn.Flatten(), # (B, 512, 1, 1) -> (B, 512)
             nn.Linear(512, 256), # Combines 512 features into 256
             nn.ReLU(inplace=True), # Non-linearity for two linear layers
             nn.Dropout(p=dropout_rate), # Randomly zeroes p of neurons to prevent overfitting
@@ -92,9 +92,9 @@ class OcularCNNModel(nn.Module):
             Raw class scores (logits) of shape (B, num_classes)
         """
 
-        x = self.features(x)    # (B, 3, 384, 384) -> (B, 256, 24, 24)
-        x = self.pool(x)        # (B, 256, 24, 24) -> (B, 256, 1, 1)
-        x = self.classifier(x)  # (B, 256, 1, 1)   -> (B, 9)
+        x = self.features(x)    # (B, 3, 384, 384) -> (B, 512, 24, 24)
+        x = self.pool(x)        # (B, 512, 24, 24) -> (B, 512, 1, 1)
+        x = self.classifier(x)  # (B, 512, 1, 1)   -> (B, 9)
 
         return x
     
