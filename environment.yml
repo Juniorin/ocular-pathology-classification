@@ -11,7 +11,7 @@ dependencies:
   - scikit-learn
   - numpy
   - jupyterlab
-  - matplotlib
+  - matplotlib=3.10.8
   - tqdm
   - notebook
   - pytorch
