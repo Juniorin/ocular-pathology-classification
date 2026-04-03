@@ -31,7 +31,7 @@ NUM_CLASSES = 9
 IMAGE_SIZE = 384
 BATCH_SIZE = 64 # From 32->64
 NUM_EPOCHS = 150 # From 75->100->150
-LEARNING_RATE = 3e-4
+LEARNING_RATE = 3e-4 # From 1e-4->3e-4
 EARLY_STOP_PATIENCE = 20 # From 8->12->20
 
 def _train_one_epoch(
