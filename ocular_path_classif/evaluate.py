@@ -17,7 +17,7 @@ import torch.nn as nn
 from loguru import logger
 from sklearn.metrics import classification_report, confusion_matrix
 
-from ocular_path_classif.config import MODELS_DIR
+from ocular_path_classif.config import MODELS_DIR, REPORTS_DIR
 from ocular_path_classif.dataset import get_dataloaders
 from ocular_path_classif.model import build_model
 
@@ -136,3 +136,9 @@ def evaluate(
 if __name__ == "__main__":
     results = evaluate()
     print(results["report"])
+
+    report_path =  REPORTS_DIR / "report_run004.txt"
+    with open(report_path, "w") as f:
+        f.write(results["report"])
+
+    logger.info(f"Report saved to {report_path}")
