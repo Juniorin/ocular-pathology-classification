@@ -68,6 +68,7 @@ class OcularCNNModel(nn.Module):
             ConvBlock(in_channels=32, out_channels=64),
             ConvBlock(in_channels=64, out_channels=128),
             ConvBlock(in_channels=128, out_channels=256),
+            ConvBlock(in_channels=256, out_channels=512),
         )
 
         # Collapse spatial dims from (B, 256, 24, 24) -> (B, 256, 1, 1) to prevent overfitting
@@ -75,10 +76,10 @@ class OcularCNNModel(nn.Module):
 
         self.classifier = nn.Sequential(
             nn.Flatten(), # (B, 256, 1, 1) -> (B, 256)
-            nn.Linear(256, 128), # Combines 256 features into 128
+            nn.Linear(512, 256), # Combines 512 features into 256
             nn.ReLU(inplace=True), # Non-linearity for two linear layers
             nn.Dropout(p=dropout_rate), # Randomly zeroes p of neurons to prevent overfitting
-            nn.Linear(128, num_classes), # Map 128 neurons to 9 class scores (logits)
+            nn.Linear(256, num_classes), # Map 256 neurons to 9 class scores (logits)
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
