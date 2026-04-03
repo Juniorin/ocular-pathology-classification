@@ -11,6 +11,7 @@ Roadmap:
 """
 
 from pathlib import Path
+import json
 
 import torch
 import torch.nn as nn
@@ -29,7 +30,7 @@ logger.info(f"Using device: {DEVICE}")
 NUM_CLASSES = 9
 IMAGE_SIZE = 384
 BATCH_SIZE = 32
-NUM_EPOCHS = 75
+NUM_EPOCHS = 100
 LEARNING_RATE = 3e-4
 EARLY_STOP_PATIENCE = 12
 
@@ -200,9 +201,11 @@ def train(
     return history
 
 if __name__ == "__main__":
-    history = train()
 
-    import json
-    history_path = MODELS_DIR / "history.json"
-    with open(history.json, "w") as f:
+    history_path = MODELS_DIR / "best_history.json"
+    checkpoint_path = MODELS_DIR / "best_model.pt"
+
+    history = train(checkpoint_path=checkpoint_path)
+    
+    with open(history_path, "w") as f:
         json.dump(history, f)
