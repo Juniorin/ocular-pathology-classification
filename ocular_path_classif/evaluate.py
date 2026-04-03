@@ -25,8 +25,8 @@ from ocular_path_classif.model import build_model
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 NUM_CLASSES = 9
-IMAGE_SIZE = 384
-BATCH_SIZE = 32
+IMAGE_SIZE = 224
+BATCH_SIZE = 64
 
 def _get_predictions(
     model: nn.Module,

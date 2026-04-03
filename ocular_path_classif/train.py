@@ -28,7 +28,7 @@ logger.info(f"Using device: {DEVICE}")
 
 # Training constants
 NUM_CLASSES = 9
-IMAGE_SIZE = 384
+IMAGE_SIZE = 224 # From 328->224
 BATCH_SIZE = 64 # From 32->64
 NUM_EPOCHS = 150 # From 75->100->150
 LEARNING_RATE = 3e-4 # From 1e-4->3e-4
