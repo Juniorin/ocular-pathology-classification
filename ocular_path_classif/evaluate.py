@@ -137,7 +137,7 @@ if __name__ == "__main__":
     results = evaluate()
     print(results["report"])
 
-    report_path =  REPORTS_DIR / "report_run004.txt"
+    report_path =  REPORTS_DIR / "report.txt"
     with open(report_path, "w") as f:
         f.write(results["report"])
 
