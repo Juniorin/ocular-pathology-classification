@@ -240,7 +240,7 @@ def get_dataloaders(
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
-        sampler=True, # weighted_sampler; not needed for training on already augmented dataset that's balanced
+        shuffle=True, # sampler=weighted_sampler; not needed for training on already augmented dataset that's balanced
         num_workers=num_workers,
         pin_memory=True, # Keep loaded batches in pinned CPU memory
     )
