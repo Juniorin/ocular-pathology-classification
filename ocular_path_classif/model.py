@@ -4,7 +4,7 @@ model.py
 CNN for ocular pathology classification.
 
 Architecture:
-    - 4 conv blocks (32, 64, 128, 256, 512): dataset size ~5k images -> 3-5 blocks, 
+    - 5 conv blocks (32, 64, 128, 256, 512): dataset size ~5k images -> 3-5 blocks, 
                                         analyzing fine details needed, 
                                         class similiarity=more depth needed,
                                         won't know if overfits until after training->regulariziation to minimize

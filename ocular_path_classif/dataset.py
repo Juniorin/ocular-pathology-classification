@@ -27,10 +27,10 @@ from ocular_path_classif.transforms import get_transforms
 EXCLUDED_CLASSES = {"Pterygium"}
 
 MINORITY_CLASSES = {
-    "Central Serous Chorioretinopathy", # 101
-    "Disc Edema",                       # 127
-    "Retinal Detachment",               # 125
-    "Retinitis Pigmentosa",             # 139
+    # "Central Serous Chorioretinopathy", # 101
+    # "Disc Edema",                       # 127
+    # "Retinal Detachment",               # 125
+    # "Retinitis Pigmentosa",             # 139 
 }
 
 def _scan_dataset(data_dir: Path) -> tuple[list, list]:
@@ -240,7 +240,7 @@ def get_dataloaders(
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
-        sampler=weighted_sampler,
+        sampler=True, # weighted_sampler; not needed for training on already augmented dataset that's balanced
         num_workers=num_workers,
         pin_memory=True, # Keep loaded batches in pinned CPU memory
     )

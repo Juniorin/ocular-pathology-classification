@@ -18,7 +18,7 @@ import torch.nn as nn
 from loguru import logger
 from torch.utils.data import DataLoader
 
-from ocular_path_classif.config import MODELS_DIR
+from ocular_path_classif.config import MODELS_DIR, RAW_DATA_DIR
 from ocular_path_classif.dataset import get_dataloaders
 from ocular_path_classif.model import build_model
 
@@ -205,7 +205,10 @@ if __name__ == "__main__":
     history_path = MODELS_DIR / "latest_run_history.json"
     checkpoint_path = MODELS_DIR / "latest_run_model.pt"
 
-    history = train(checkpoint_path=checkpoint_path)
+    history = train(
+        data_dir=RAW_DATA_DIR / "Augmented_Dataset", 
+        checkpoint_path=checkpoint_path,
+    )
     
     with open(history_path, "w") as f:
         json.dump(history, f)
