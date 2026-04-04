@@ -31,8 +31,8 @@ NUM_CLASSES = 9
 IMAGE_SIZE = 224 # From 328->224
 BATCH_SIZE = 64 # From 32->64
 NUM_EPOCHS = 150 # From 75->100->150
-LEARNING_RATE = 3e-4 # From 1e-4->3e-4
-EARLY_STOP_PATIENCE = 20 # From 8->12->20
+LEARNING_RATE = 3e-4 # From 1e-4->3e-4->1e-4->3e-4
+EARLY_STOP_PATIENCE = 25 # From 8->12->20
 
 def _train_one_epoch(
         model: nn.Module,
@@ -202,8 +202,8 @@ def train(
 
 if __name__ == "__main__":
 
-    history_path = MODELS_DIR / "best_history.json"
-    checkpoint_path = MODELS_DIR / "best_model.pt"
+    history_path = MODELS_DIR / "latest_run_history.json"
+    checkpoint_path = MODELS_DIR / "latest_run_model.pt"
 
     history = train(checkpoint_path=checkpoint_path)
     
