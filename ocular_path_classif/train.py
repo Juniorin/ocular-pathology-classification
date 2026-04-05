@@ -28,7 +28,7 @@ logger.info(f"Using device: {DEVICE}")
 
 # Training constants
 NUM_CLASSES = 9
-IMAGE_SIZE = 224 # From 328->224
+IMAGE_SIZE = 256 # From 328->224->256
 BATCH_SIZE = 64 # From 32->64
 NUM_EPOCHS = 150 # From 75->100->150
 LEARNING_RATE = 3e-4 # From 1e-4->3e-4->1e-4->3e-4
@@ -149,15 +149,21 @@ def train(
     weights = weights / weights.sum() * NUM_CLASSES
     class_weights = weights.to(DEVICE)
 
-    criterion = nn.CrossEntropyLoss(weight=class_weights)
+    criterion = nn.CrossEntropyLoss(
+        weight=class_weights,
+        label_smoothing=0.1,
+    ) 
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=learning_rate,
+        weight_decay=1e-4,
+    )
 
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer,
-        mode="min",
-        factor=0.5,
-        patience=4,
+        T_max=NUM_EPOCHS,
+        eta_min=1e-6,
     )
 
     history = {"train_loss": [], "val_loss": []}
@@ -170,7 +176,7 @@ def train(
         train_loss = _train_one_epoch(model, train_loader, criterion, optimizer)
         val_loss = _val_one_epoch(model, val_loader, criterion)
     
-        scheduler.step(val_loss)
+        scheduler.step()
 
         history["train_loss"].append(train_loss)
         history["val_loss"].append(val_loss)
