@@ -83,8 +83,8 @@ def evaluate(
     """
 
     if checkpoint_path is None:
-        checkpoint_path = MODELS_DIR / "best_model.pt"
-    
+        checkpoint_path = MODELS_DIR / "latest_run_model.pt"
+    logger.info(f"Testing on data directory: {data_dir}")
     # Creates OcularCNN object and loads the trained weights into it
     model = build_model(num_classes=NUM_CLASSES).to(DEVICE)
     model.load_state_dict(torch.load(checkpoint_path, map_location=DEVICE, weights_only=True))
@@ -137,7 +137,7 @@ if __name__ == "__main__":
     results = evaluate()
     print(results["report"])
 
-    report_path =  REPORTS_DIR / "report.txt"
+    report_path =  REPORTS_DIR / "latest_run_report002.txt"
     with open(report_path, "w") as f:
         f.write(results["report"])
 
