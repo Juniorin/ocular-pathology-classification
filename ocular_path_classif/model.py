@@ -62,7 +62,7 @@ class OcularCNNModel(nn.Module):
         """
         super().__init__()
 
-        # Each block doubles channels, but halves spatial dimensions 384->192->96->48->24->12
+        # Each block doubles channels, but halves spatial dimensions 256->128->64->32->16->8
         self.features = nn.Sequential(
             ConvBlock(in_channels=3, out_channels=32),
             ConvBlock(in_channels=32, out_channels=64),
@@ -71,7 +71,7 @@ class OcularCNNModel(nn.Module):
             ConvBlock(in_channels=256, out_channels=512),
         )
 
-        # Collapse spatial dims from (B, 512, 24, 24) -> (B, 512, 1, 1) to prevent overfitting
+        # Collapse spatial dims from (B, 512, 8, 8) -> (B, 512, 1, 1) to prevent overfitting
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
 
         self.classifier = nn.Sequential(
@@ -92,8 +92,8 @@ class OcularCNNModel(nn.Module):
             Raw class scores (logits) of shape (B, num_classes)
         """
 
-        x = self.features(x)    # (B, 3, 384, 384) -> (B, 512, 24, 24)
-        x = self.pool(x)        # (B, 512, 24, 24) -> (B, 512, 1, 1)
+        x = self.features(x)    # (B, 3, 256, 256) -> (B, 512, 8, 8)
+        x = self.pool(x)        # (B, 512, 8, 8) -> (B, 512, 1, 1)
         x = self.classifier(x)  # (B, 512, 1, 1)   -> (B, 9)
 
         return x

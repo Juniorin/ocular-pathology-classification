@@ -32,7 +32,7 @@ IMAGE_SIZE = 256 # From 328->224->256
 BATCH_SIZE = 64 # From 32->64
 NUM_EPOCHS = 150 # From 75->100->150
 LEARNING_RATE = 3e-4 # From 1e-4->3e-4->1e-4->3e-4
-EARLY_STOP_PATIENCE = 25 # From 8->12->20
+EARLY_STOP_PATIENCE = 25 # From 8->12->20->25
 
 def _train_one_epoch(
         model: nn.Module,
